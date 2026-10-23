@@ -3,7 +3,7 @@ import { SITE, waLink } from '../data/site'
 export function buildWhatsAppMessage(lead) {
   return [
     `Halo ${SITE.brand}, saya ${lead.name}${lead.company ? ` dari ${lead.company}` : ''}.`,
-    `Saya tertarik dengan ${lead.product}.`,
+    `Saya tertarik dengan ${SITE.product} (SG50 / SG90).`,
     `WhatsApp: ${lead.phone}`,
     `Email: ${lead.email}`,
     'Mohon info penawaran. Terima kasih.',
@@ -16,7 +16,7 @@ export function buildWhatsAppMessage(lead) {
  * - Jika kosong: kembalikan tautan WhatsApp, hasilnya { mode: 'whatsapp', url }.
  * Melempar error jika pengiriman ke endpoint gagal.
  */
-export async function submitLead(lead) {
+export async function submitLead(lead, source = 'landing') {
   if (!SITE.formEndpoint) {
     return { mode: 'whatsapp', url: waLink(buildWhatsAppMessage(lead)) }
   }
@@ -27,7 +27,7 @@ export async function submitLead(lead) {
     method: 'POST',
     mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ ...lead, source: 'landing-hero', submittedAt: new Date().toISOString() }),
+    body: JSON.stringify({ ...lead, source, submittedAt: new Date().toISOString() }),
   })
   return { mode: 'endpoint' }
 }

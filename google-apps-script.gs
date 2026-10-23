@@ -1,5 +1,5 @@
 /**
- * Penerima data form hero -> Google Sheets.
+ * Penerima data form (hero dan form CTA) -> Google Sheets.
  *
  * Cara pakai:
  * 1. Buat Google Sheet baru, lalu buka Extensions > Apps Script.
@@ -15,19 +15,11 @@ function doPost(e) {
   var sheet = ss.getSheetByName('Leads') || ss.insertSheet('Leads')
 
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Waktu', 'Nama', 'WhatsApp', 'Email', 'Perusahaan', 'Produk', 'Sumber'])
+    sheet.appendRow(['Waktu', 'Nama', 'WhatsApp', 'Email', 'Perusahaan', 'Sumber'])
   }
 
   // Awalan apostrof menjaga nomor yang diawali + atau 0 agar tidak diubah Sheets.
-  sheet.appendRow([
-    new Date(),
-    data.name,
-    "'" + data.phone,
-    data.email,
-    data.company,
-    data.product,
-    data.source,
-  ])
+  sheet.appendRow([new Date(), data.name, "'" + data.phone, data.email, data.company, data.source])
 
   return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(
     ContentService.MimeType.JSON,
